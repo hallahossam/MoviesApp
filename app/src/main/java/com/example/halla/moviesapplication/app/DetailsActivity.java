@@ -1,10 +1,11 @@
-package com.example.halla.moviesapplication;
+package com.example.halla.moviesapplication.app;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.halla.moviesapplication.R;
 import com.example.halla.moviesapplication.models.MovieModel;
 import com.squareup.picasso.Picasso;
 
@@ -31,6 +32,7 @@ public class DetailsActivity extends AppCompatActivity {
 
     }
 
+    //This function is for setting the movie details in the views
     public void settingMovieDetails(){
         movieTitle.setText(movieModel.getmMovieTitle());
         movieOverview.setText(movieModel.getmMovieOverview());

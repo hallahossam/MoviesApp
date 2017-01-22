@@ -54,7 +54,10 @@ public class MoviesAdapter extends BaseAdapter {
         else{
             viewHolder = (ViewHolder) view.getTag();
         }
-        Picasso.with(mContext).load("http://image.tmdb.org/t/p/w185/"+mMovieModels.get(i).getmMoviePoster()).into(viewHolder.moviePoster);
+        Picasso.with(mContext).load("http://image.tmdb.org/t/p/w185/"+mMovieModels.get(i).getmMoviePoster())
+                .placeholder(R.mipmap.ic_launcher)
+                .error(R.mipmap.ic_launcher)
+                .into(viewHolder.moviePoster);
         return view;
     }
 

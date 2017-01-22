@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -27,7 +28,7 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
 
     //TODO: please add the API Key in this Variable
-    private String API_KEY = "";
+    private String API_KEY = "b08c49af044bc54f2d9e7a5208b72ac0";
     private String toggle = "popular";
     private String mUrl = "http://api.themoviedb.org/3/movie/" + toggle + "?api_key=" + API_KEY;
     private GridView mGridView;
@@ -49,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent = new Intent(MainActivity.this, DetailsActivity.class);
                 intent.putExtra("MovieObject", mResult.get(i));
+                intent.putExtra("API_KEY", API_KEY);
                 startActivity(intent);
             }
         });
@@ -97,6 +99,7 @@ public class MainActivity extends AppCompatActivity {
                 movieModel.setmMovieRating(singleMovie.getString("vote_average"));
                 movieModel.setmMovieReleaseDate(singleMovie.getString("release_date"));
                 movieModel.setmMovieTitle(singleMovie.getString("original_title"));
+                movieModel.setmMovieID(singleMovie.getString("id"));
 
                 movieModels.add(movieModel);
             }
@@ -124,13 +127,22 @@ public class MainActivity extends AppCompatActivity {
                    toggle = "popular";
                     apiCall(mUrl);
                 }
+                else{
+                    Toast.makeText(MainActivity.this,"Popular movies are already chosen",Toast.LENGTH_LONG).show();
+                }
                 break;
 
             case R.id.top_rated:
+                //Msh by5osh hena !!
+                //Debug hena baby
                 if(mSelectionFlag != false){
                     mSelectionFlag = false;
+                    //Check hena le top rated mb3tsh sha3'aala
                     toggle = "top_rated";
                     apiCall(mUrl);
+                }
+                else{
+                    Toast.makeText(MainActivity.this,"Top rated movies are already chosen",Toast.LENGTH_LONG).show();
                 }
                 break;
         }

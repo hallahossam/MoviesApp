@@ -49,5 +49,37 @@
         android:layout_below="@+id/img_selected_movie"
         android:layout_marginTop="@dimen/activity_vertical_margin"/>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:layout_below="@+id/tv_movie_overview"
+        android:id="@+id/horizontal_line"
+        android:background="@color/colorPrimaryDark"/>
+
+
+<com.github.paolorotolo.expandableheightlistview.ExpandableHeightListView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/horizontal_line"
+    android:layout_marginTop="@dimen/activity_vertical_margin"
+    android:id="@+id/listview_trailers"></com.github.paolorotolo.expandableheightlistview.ExpandableHeightListView>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:layout_below="@+id/listview_trailers"
+        android:id="@+id/horizontal_line2"
+        android:background="@color/colorPrimaryDark"/>
+
+    <com.github.paolorotolo.expandableheightlistview.ExpandableHeightListView
+        android:layout_width="wrap_content"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/horizontal_line2"
+        android:id="@+id/listview_reviews"></com.github.paolorotolo.expandableheightlistview.ExpandableHeightListView>
+
+
 </RelativeLayout>
 </ScrollView>

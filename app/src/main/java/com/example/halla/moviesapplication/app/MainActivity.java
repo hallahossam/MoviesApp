@@ -167,7 +167,8 @@ public class MainActivity extends AppCompatActivity {
 
                     movieModels.add(movieModel);
                 }
-                mResult = movieModels;
+
+                mResult = movieModels ;
 
                 mMoviesAdapter = new MoviesAdapter(mResult, MainActivity.this);
                 mGridView.setAdapter(mMoviesAdapter);

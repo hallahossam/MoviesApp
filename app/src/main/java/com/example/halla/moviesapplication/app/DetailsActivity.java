@@ -104,6 +104,7 @@ public class DetailsActivity extends AppCompatActivity {
                 .error(R.mipmap.ic_launcher)
                 .into(moviePoster);
 
+
         if(onOff == true) {
             mMovieID = movieModel.getmMovieID();
             API_KEY = getIntent().getExtras().getString("API_KEY");

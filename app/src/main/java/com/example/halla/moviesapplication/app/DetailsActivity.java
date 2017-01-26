@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -17,6 +18,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.halla.moviesapplication.R;
 import com.example.halla.moviesapplication.adapters.ReviewsAdapter;
 import com.example.halla.moviesapplication.adapters.TrailersAdapter;
+import com.example.halla.moviesapplication.models.MovieItem;
 import com.example.halla.moviesapplication.models.MovieModel;
 import com.example.halla.moviesapplication.models.MovieReviews;
 import com.example.halla.moviesapplication.models.MovieTrailers;
@@ -38,6 +40,7 @@ public class DetailsActivity extends AppCompatActivity {
     private   MovieModel movieModel;
     private String API_KEY = "";
     private String mMovieID = "";
+    boolean onOff ;
 
     private TrailersAdapter trailersAdapter;
     private ReviewsAdapter reviewsAdapter;
@@ -45,6 +48,7 @@ public class DetailsActivity extends AppCompatActivity {
     private ExpandableHeightListView reviewList;
     private ExpandableHeightListView trailerList;
 
+    private Button addToFavs;
     private ArrayList<MovieTrailers> movieTrailersArrayList;
 
 
@@ -53,13 +57,14 @@ public class DetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
         movieModel = (MovieModel) getIntent().getExtras().getParcelable("MovieObject");
+        onOff = getIntent().getExtras().getBoolean("OnlineOrOffline");
 
         movieTitle = (TextView) findViewById(R.id.tv_movie_title);
         movieRate = (TextView) findViewById(R.id.tv_movie_rating);
         movieReleaseDate = (TextView) findViewById(R.id.tv_movie_release_date);
         movieOverview = (TextView) findViewById(R.id.tv_movie_overview);
         moviePoster = (ImageView) findViewById(R.id.img_selected_movie);
-
+        addToFavs = (Button) findViewById(R.id.btn_add_fav);
         reviewList = (ExpandableHeightListView) findViewById(R.id.listview_reviews);
         trailerList = (ExpandableHeightListView) findViewById(R.id.listview_trailers);
 
@@ -73,6 +78,18 @@ public class DetailsActivity extends AppCompatActivity {
             }
         });
 
+        addToFavs.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                MovieItem movieItem = new MovieItem();
+                movieItem.mMovieOverview = movieModel.getmMovieOverview();
+                movieItem.mMoviePoster = movieModel.getmMoviePoster();
+                movieItem.mMovieRating = movieModel.getmMovieRating();
+                movieItem.mMovieReleaseDate = movieModel.getmMovieReleaseDate();
+                movieItem.mMovieTitle = movieModel.getmMovieTitle();
+                movieItem.save();
+            }
+        });
 
     }
 
@@ -86,12 +103,13 @@ public class DetailsActivity extends AppCompatActivity {
                 .placeholder(R.mipmap.ic_launcher)
                 .error(R.mipmap.ic_launcher)
                 .into(moviePoster);
-        mMovieID = movieModel.getmMovieID();
-        API_KEY = getIntent().getExtras().getString("API_KEY");
 
-        trailers_call("http://api.themoviedb.org/3/movie/" + mMovieID + "/videos?api_key=" + API_KEY);
-        Reviews_call("http://api.themoviedb.org/3/movie/" + mMovieID + "/reviews?api_key=" + API_KEY);
-
+        if(onOff == true) {
+            mMovieID = movieModel.getmMovieID();
+            API_KEY = getIntent().getExtras().getString("API_KEY");
+            trailers_call("http://api.themoviedb.org/3/movie/" + mMovieID + "/videos?api_key=" + API_KEY);
+            Reviews_call("http://api.themoviedb.org/3/movie/" + mMovieID + "/reviews?api_key=" + API_KEY);
+        }
     }
 
     public void trailers_call(String url){
@@ -102,8 +120,6 @@ public class DetailsActivity extends AppCompatActivity {
                 trailersAdapter = new TrailersAdapter(movieTrailersArrayList,DetailsActivity.this);
                 trailerList.setAdapter(trailersAdapter);
                 trailerList.setExpanded(true);
-
-
             }
         }, new Response.ErrorListener() {
             @Override
@@ -121,8 +137,6 @@ public class DetailsActivity extends AppCompatActivity {
                 reviewsAdapter = new ReviewsAdapter(JsonReviewParse(response),DetailsActivity.this);
                 reviewList.setAdapter(reviewsAdapter);
                 reviewList.setExpanded(true);
-
-
             }
         }, new Response.ErrorListener() {
             @Override
@@ -147,7 +161,6 @@ public class DetailsActivity extends AppCompatActivity {
                 movieTrailer.setTrailerName(singleTrailer.getString("name"));
                 movieTrailers.add(movieTrailer);
             }
-
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -166,10 +179,8 @@ public class DetailsActivity extends AppCompatActivity {
                 singleTrailer = moviesArray.getJSONObject(i);
                 movieReview.setReviewAuthor(singleTrailer.getString("author"));
                 movieReview.setReviewContent(singleTrailer.getString("content"));
-
                 movieReviews.add(movieReview);
             }
-
         } catch (JSONException e) {
             e.printStackTrace();
         }

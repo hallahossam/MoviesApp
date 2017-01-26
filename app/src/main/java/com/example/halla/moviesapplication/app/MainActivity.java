@@ -11,12 +11,14 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.Toast;
 
+import com.activeandroid.ActiveAndroid;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.halla.moviesapplication.R;
 import com.example.halla.moviesapplication.adapters.MoviesAdapter;
+import com.example.halla.moviesapplication.models.MovieItem;
 import com.example.halla.moviesapplication.models.MovieModel;
 
 import org.json.JSONArray;
@@ -24,26 +26,33 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     //TODO: please add the API Key in this Variable
     private String API_KEY = "b08c49af044bc54f2d9e7a5208b72ac0";
-    private String toggle = "popular";
-    private String mUrl = "http://api.themoviedb.org/3/movie/" + toggle + "?api_key=" + API_KEY;
+
+    private String baseUrl = "http://api.themoviedb.org/3/movie/";
     private GridView mGridView;
     private MoviesAdapter mMoviesAdapter;
     private ArrayList<MovieModel> mResult;
     private boolean mSelectionFlag;
+    private boolean onlineOfflineMovie;
+    private MovieItem movieItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ActiveAndroid.initialize(getApplication());
+
         mSelectionFlag = true;
+        onlineOfflineMovie = true;
 
         mGridView = (GridView) findViewById(R.id.grid_movies);
-        apiCall(mUrl);
+
+        apiCall(baseUrl + "popular" + "?api_key=" + API_KEY);
 
         mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -51,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(MainActivity.this, DetailsActivity.class);
                 intent.putExtra("MovieObject", mResult.get(i));
                 intent.putExtra("API_KEY", API_KEY);
+                intent.putExtra("OnlineOrOffline", onlineOfflineMovie);
                 startActivity(intent);
             }
         });
@@ -60,9 +70,7 @@ public class MainActivity extends AppCompatActivity {
     /* apiCall is for calling the moviedb.org API, it accepts one parameter
      which is the url..
      Used Volley Library to handle the JsonObjectRequest. */
-
     public void apiCall(String sentUrl){
-
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, sentUrl,
                 null, new Response.Listener<JSONObject>() {
             @Override
@@ -70,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
                 mResult = JsonParse(response);
                 mMoviesAdapter = new MoviesAdapter(mResult, MainActivity.this);
                 mGridView.setAdapter(mMoviesAdapter);
-                       }
+            }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
@@ -81,9 +89,8 @@ public class MainActivity extends AppCompatActivity {
         AppController.getInstance().addToRequestQueue(jsonObjectRequest);
     }
 
-
     /*JsonParse is for parsing the json object returned from the request.
-     it accepts one parameter, which is the json object. */
+       it accepts one parameter, which is the json object. */
     public ArrayList<MovieModel> JsonParse(JSONObject movieObject){
 
         ArrayList<MovieModel> movieModels = new ArrayList<>();
@@ -124,28 +131,51 @@ public class MainActivity extends AppCompatActivity {
             case R.id.most_popular:
                 if(mSelectionFlag != true){
                     mSelectionFlag = true;
-                   toggle = "popular";
-                    apiCall(mUrl);
+                    onlineOfflineMovie = true;
+                    apiCall(baseUrl + "popular" + "?api_key=" + API_KEY);
                 }
                 else{
-                    Toast.makeText(MainActivity.this,"Popular movies are already chosen",Toast.LENGTH_LONG).show();
+                    Toast.makeText(MainActivity.this,"Popular movies is already chosen",Toast.LENGTH_LONG).show();
                 }
                 break;
 
             case R.id.top_rated:
-                //Msh by5osh hena !!
-                //Debug hena baby
                 if(mSelectionFlag != false){
+                    onlineOfflineMovie = true;
                     mSelectionFlag = false;
-                    //Check hena le top rated mb3tsh sha3'aala
-                    toggle = "top_rated";
-                    apiCall(mUrl);
+                    apiCall(baseUrl + "top_rated" + "?api_key=" + API_KEY);
                 }
                 else{
-                    Toast.makeText(MainActivity.this,"Top rated movies are already chosen",Toast.LENGTH_LONG).show();
+                    Toast.makeText(MainActivity.this,"Top rated movies is already chosen",Toast.LENGTH_LONG).show();
                 }
+                break;
+
+            case R.id.favourites:
+                onlineOfflineMovie = false;
+                movieItem = new MovieItem();
+                List<MovieItem> movieItemList = movieItem.findAll();
+                ArrayList<MovieModel> movieModels = new ArrayList<>();
+                int length = movieItemList.size();
+
+                for(int i=0; i<length; i++){
+                    MovieModel movieModel = new MovieModel();
+                    movieModel.setmMovieTitle(movieItemList.get(i).mMovieTitle);
+                    movieModel.setmMovieOverview(movieItemList.get(i).mMovieOverview);
+                    movieModel.setmMoviePoster(movieItemList.get(i).mMoviePoster);
+                    movieModel.setmMovieRating(movieItemList.get(i).mMovieRating);
+                    movieModel.setmMovieReleaseDate(movieItemList.get(i).mMovieReleaseDate);
+
+                    movieModels.add(movieModel);
+                }
+                mResult = movieModels;
+
+                mMoviesAdapter = new MoviesAdapter(mResult, MainActivity.this);
+                mGridView.setAdapter(mMoviesAdapter);
                 break;
         }
         return super.onOptionsItemSelected(item);
     }
+
+
+
 }

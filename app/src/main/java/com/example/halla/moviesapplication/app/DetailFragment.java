@@ -21,7 +21,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.halla.moviesapplication.R;
 import com.example.halla.moviesapplication.adapters.ReviewsAdapter;
 import com.example.halla.moviesapplication.adapters.TrailersAdapter;
-import com.example.halla.moviesapplication.models.MovieItem;
+import com.example.halla.moviesapplication.models.movieItem;
 import com.example.halla.moviesapplication.models.MovieModel;
 import com.example.halla.moviesapplication.models.MovieReviews;
 import com.example.halla.moviesapplication.models.MovieTrailers;
@@ -82,7 +82,7 @@ public class DetailFragment extends Fragment {
                     startActivity(intent);
                 }
             });
-            final MovieItem movieItem = new MovieItem();
+            final movieItem movieItem = new movieItem();
             if(movieItem.findMovie(movieModel.getmMovieTitle()) != null){
                 addToFavs.setVisibility(View.INVISIBLE);
             }

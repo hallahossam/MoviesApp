@@ -21,7 +21,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.halla.moviesapplication.R;
 import com.example.halla.moviesapplication.adapters.MoviesAdapter;
-import com.example.halla.moviesapplication.models.MovieItem;
+import com.example.halla.moviesapplication.models.movieItem;
 import com.example.halla.moviesapplication.models.MovieModel;
 
 import org.json.JSONArray;
@@ -45,7 +45,7 @@ public class MainFragment extends Fragment {
     private ArrayList<MovieModel> mResult;
     private boolean mSelectionFlag;
     private boolean onlineOfflineMovie;
-    private MovieItem movieItem;
+    private com.example.halla.moviesapplication.models.movieItem movieItem;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -161,8 +161,8 @@ public class MainFragment extends Fragment {
                 break;
 
             case R.id.favourites:
-                movieItem = new MovieItem();
-                List<MovieItem> movieItemList = movieItem.findAll();
+                movieItem = new movieItem();
+                List<com.example.halla.moviesapplication.models.movieItem> movieItemList = movieItem.findAll();
                 int length = movieItemList.size();
                 if(length == 0){
                     onlineOfflineMovie = true;

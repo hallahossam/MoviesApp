@@ -13,7 +13,6 @@ import java.util.List;
 @Table(name = "MovieItem", id = "_id")
 public class MovieItem extends Model {
 
-
     @Column(name = "moviePoster")
     public String mMoviePoster;
 

@@ -10,8 +10,8 @@ import java.util.List;
 /**
  * Created by Halla on 22/01/2017.
  */
-@Table(name = "MovieItem", id = "_id")
-public class MovieItem extends Model {
+@Table(name = "movieItem", id = "_id")
+public class movieItem extends Model {
 
     @Column(name = "moviePoster")
     public String mMoviePoster;
@@ -29,15 +29,15 @@ public class MovieItem extends Model {
     public String mMovieReleaseDate;
 
 
-    public MovieItem(){
+    public movieItem(){
         super();
     };
 
-    public  List<MovieItem> findAll(){
-        return new Select().from(MovieItem.class).execute();
+    public  List<movieItem> findAll(){
+        return new Select().from(movieItem.class).execute();
     }
 
-    public MovieItem findMovie(String movieTitle){
-        return new Select().from(MovieItem.class).where("movieTitle =?", movieTitle).executeSingle();
+    public movieItem findMovie(String movieTitle){
+        return new Select().from(movieItem.class).where("movieTitle =?", movieTitle).executeSingle();
     }
 }

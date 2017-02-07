@@ -1,8 +1,12 @@
 package com.example.halla.moviesapplication.app;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.Toast;
 
 import com.example.halla.moviesapplication.R;
 
@@ -13,16 +17,21 @@ public class MainActivity extends AppCompatActivity implements MainFragment.call
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        if(findViewById(R.id.fragment_details_container) != null){
-            mTwoBane = true;
-            if(savedInstanceState == null){
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_details_container, new DetailFragment()).commit();
+        ConnectivityManager connectivityManager = (ConnectivityManager)
+                getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        if (networkInfo == null || !networkInfo.isConnectedOrConnecting()) {
+            Toast.makeText(MainActivity.this, "this app requires internet to load movies", Toast.LENGTH_LONG).show();
+        } else {
+            setContentView(R.layout.activity_main);
+            if (findViewById(R.id.fragment_details_container) != null) {
+                mTwoBane = true;
+                if (savedInstanceState == null) {
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_details_container, new DetailFragment()).commit();
+                }
+            } else {
+                mTwoBane = false;
             }
-        }
-        else{
-            mTwoBane = false;
         }
     }
 

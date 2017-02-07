@@ -1,5 +1,8 @@
 package com.example.halla.moviesapplication.app;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -64,7 +67,8 @@ public class MainFragment extends Fragment {
 
         mGridView = (GridView) view.findViewById(R.id.grid_movies);
 
-        apiCall(baseUrl + "popular" + "?api_key=" + API_KEY);
+            apiCall(baseUrl + "popular" + "?api_key=" + API_KEY);
+
 
         mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

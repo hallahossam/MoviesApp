@@ -40,7 +40,7 @@ import java.util.List;
 public class MainFragment extends Fragment {
 
     //TODO: please add the API Key in this Variable
-    private String API_KEY = "b08c49af044bc54f2d9e7a5208b72ac0";
+    private String API_KEY = "";
 
     private String baseUrl = "http://api.themoviedb.org/3/movie/";
     private GridView mGridView;

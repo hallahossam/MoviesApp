@@ -10,9 +10,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -52,7 +52,7 @@ public class DetailFragment extends Fragment {
     private ExpandableHeightListView reviewList;
     private ExpandableHeightListView trailerList;
     Bundle bundle;
-    private Button addToFavs;
+    private ImageView addToFavs;
     private ArrayList<MovieTrailers> movieTrailersArrayList;
 
     @Nullable
@@ -69,7 +69,7 @@ public class DetailFragment extends Fragment {
             movieReleaseDate = (TextView) view.findViewById(R.id.tv_movie_release_date);
             movieOverview = (TextView) view.findViewById(R.id.tv_movie_overview);
             moviePoster = (ImageView) view.findViewById(R.id.img_selected_movie);
-            addToFavs = (Button) view.findViewById(R.id.btn_add_fav);
+            addToFavs = (ImageView) view.findViewById(R.id.img_add_fav);
             reviewList = (ExpandableHeightListView) view.findViewById(R.id.listview_reviews);
             trailerList = (ExpandableHeightListView) view.findViewById(R.id.listview_trailers);
 
@@ -82,20 +82,26 @@ public class DetailFragment extends Fragment {
                     startActivity(intent);
                 }
             });
-
+            final MovieItem movieItem = new MovieItem();
+            if(movieItem.findMovie(movieModel.getmMovieTitle()) != null){
+                addToFavs.setVisibility(View.INVISIBLE);
+            }
             addToFavs.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    MovieItem movieItem = new MovieItem();
+
                     movieItem.mMovieOverview = movieModel.getmMovieOverview();
                     movieItem.mMoviePoster = movieModel.getmMoviePoster();
                     movieItem.mMovieRating = movieModel.getmMovieRating();
                     movieItem.mMovieReleaseDate = movieModel.getmMovieReleaseDate();
                     movieItem.mMovieTitle = movieModel.getmMovieTitle();
                     movieItem.save();
+                    addToFavs.setVisibility(View.INVISIBLE);
+                    Toast.makeText(getContext(),"Added to favourites",Toast.LENGTH_LONG).show();
+
+
                 }
             });
-
         }
         return view;
     }

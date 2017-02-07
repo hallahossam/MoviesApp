@@ -30,16 +30,15 @@ public class MovieItem extends Model {
     public String mMovieReleaseDate;
 
 
-
     public MovieItem(){
         super();
     };
 
-    public  static MovieItem findByID(String id){
-        return new Select().from(MovieItem.class).where(id + " = ?", id).executeSingle();
+    public  List<MovieItem> findAll(){
+        return new Select().from(MovieItem.class).execute();
     }
 
-    public static List<MovieItem> findAll(){
-        return new Select().from(MovieItem.class).execute();
+    public MovieItem findMovie(String movieTitle){
+        return new Select().from(MovieItem.class).where("movieTitle =?", movieTitle).executeSingle();
     }
 }

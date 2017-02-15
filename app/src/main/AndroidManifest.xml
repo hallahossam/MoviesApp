@@ -11,15 +11,6 @@
         android:name=".app.AppController"
         android:theme="@style/AppTheme">
 
-        <meta-data
-            android:name="AA_DB_NAME"
-            android:value="movies.db" />
-        <meta-data
-            android:name="AA_DB_VERSION"
-            android:value="1" />
-        <meta-data
-            android:name="AA_MODELS"
-            android:value="com.example.halla.moviesapplication.models.MovieItem" />
 
         <activity android:name=".app.MainActivity">
             <intent-filter>

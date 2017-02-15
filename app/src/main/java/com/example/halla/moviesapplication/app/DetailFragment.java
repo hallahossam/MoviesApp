@@ -21,7 +21,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.halla.moviesapplication.R;
 import com.example.halla.moviesapplication.adapters.ReviewsAdapter;
 import com.example.halla.moviesapplication.adapters.TrailersAdapter;
-import com.example.halla.moviesapplication.models.movieItem;
+import com.example.halla.moviesapplication.db.DatabaseHelper;
 import com.example.halla.moviesapplication.models.MovieModel;
 import com.example.halla.moviesapplication.models.MovieReviews;
 import com.example.halla.moviesapplication.models.MovieTrailers;
@@ -81,21 +81,19 @@ public class DetailFragment extends Fragment {
                     Intent intent = new Intent(null, Uri.parse("https://www.youtube.com/watch?v=" + movieTrailersArrayList.get(i).getTrailerKey()));
                     startActivity(intent);
                 }
-            });
-            final movieItem movieItem = new movieItem();
-            if(movieItem.findMovie(movieModel.getmMovieTitle()) != null){
+            })
+            ;
+            final DatabaseHelper mDatabaseHelper = new DatabaseHelper(getContext());
+
+            if(mDatabaseHelper.exists(movieModel.getmMovieTitle()) == true){
                 addToFavs.setVisibility(View.INVISIBLE);
             }
+
             addToFavs.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
 
-                    movieItem.mMovieOverview = movieModel.getmMovieOverview();
-                    movieItem.mMoviePoster = movieModel.getmMoviePoster();
-                    movieItem.mMovieRating = movieModel.getmMovieRating();
-                    movieItem.mMovieReleaseDate = movieModel.getmMovieReleaseDate();
-                    movieItem.mMovieTitle = movieModel.getmMovieTitle();
-                    movieItem.save();
+                    mDatabaseHelper.addToDatabase(movieModel);
                     addToFavs.setVisibility(View.INVISIBLE);
                     Toast.makeText(getContext(),"Added to favourites",Toast.LENGTH_LONG).show();
 

@@ -1,5 +1,6 @@
 package com.example.halla.moviesapplication.app;
 
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -14,14 +15,13 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.Toast;
 
-import com.activeandroid.ActiveAndroid;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.halla.moviesapplication.R;
 import com.example.halla.moviesapplication.adapters.MoviesAdapter;
-import com.example.halla.moviesapplication.models.movieItem;
+import com.example.halla.moviesapplication.db.DatabaseHelper;
 import com.example.halla.moviesapplication.models.MovieModel;
 
 import org.json.JSONArray;
@@ -29,7 +29,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Halla on 26/01/2017.
@@ -37,7 +36,7 @@ import java.util.List;
 public class MainFragment extends Fragment {
 
     //TODO: please add the API Key in this Variable
-    private String API_KEY = "";
+    private String API_KEY = "b08c49af044bc54f2d9e7a5208b72ac0";
 
     private String baseUrl = "http://api.themoviedb.org/3/movie/";
     private GridView mGridView;
@@ -45,7 +44,7 @@ public class MainFragment extends Fragment {
     private ArrayList<MovieModel> mResult;
     private boolean mSelectionFlag;
     private boolean onlineOfflineMovie;
-    private com.example.halla.moviesapplication.models.movieItem movieItem;
+    private DatabaseHelper mDatabaseHelper;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -57,7 +56,6 @@ public class MainFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.frag_main,container,false);
-        ActiveAndroid.initialize(getContext());
 
         mSelectionFlag = true;
         onlineOfflineMovie = true;
@@ -161,11 +159,12 @@ public class MainFragment extends Fragment {
                 break;
 
             case R.id.favourites:
-                movieItem = new movieItem();
-                List<com.example.halla.moviesapplication.models.movieItem> movieItemList = movieItem.findAll();
-                int length = movieItemList.size();
+                mDatabaseHelper = new DatabaseHelper(getContext());
+                Cursor cursor = mDatabaseHelper.getAllMovies();
+                int length = cursor.getCount();
                 if(length == 0){
                     onlineOfflineMovie = true;
+                    Toast.makeText(getContext(),"No Favourite Movies Added",Toast.LENGTH_LONG).show();
                     break;
                 }
                 else {
@@ -174,13 +173,14 @@ public class MainFragment extends Fragment {
 
                     for (int i = 0; i < length; i++) {
                         MovieModel movieModel = new MovieModel();
-                        movieModel.setmMovieTitle(movieItemList.get(i).mMovieTitle);
-                        movieModel.setmMovieOverview(movieItemList.get(i).mMovieOverview);
-                        movieModel.setmMoviePoster(movieItemList.get(i).mMoviePoster);
-                        movieModel.setmMovieRating(movieItemList.get(i).mMovieRating);
-                        movieModel.setmMovieReleaseDate(movieItemList.get(i).mMovieReleaseDate);
+                        movieModel.setmMovieTitle(cursor.getString(2));
+                        movieModel.setmMovieOverview(cursor.getString(3));
+                        movieModel.setmMoviePoster(cursor.getString(1));
+                        movieModel.setmMovieRating(cursor.getString(4));
+                        movieModel.setmMovieReleaseDate(cursor.getString(5));
 
                         movieModels.add(movieModel);
+                        cursor.moveToNext();
                     }
 
                     mResult = movieModels;
